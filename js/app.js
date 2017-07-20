@@ -2,9 +2,10 @@ function Nav(emit, refresh) {
   return { render: render };
 
   function render() {
+    var thing = '';
     return ["nav",
       ['ul',
-        ['li', ['a', {href: '#files'}, 'Files']],
+        ['li', {onclick: urlChange}, ['a$thing', {href: '#files', value: thing}, 'Files']],
         ['li', ['a', {href: '#shared'}, 'Shared']],
         ['li', ['a', {href: '#music'}, 'Music']],
         ['li', ['a', {href: '#photos'}, 'Photos']],
@@ -12,44 +13,22 @@ function Nav(emit, refresh) {
     ];
   }
 }
-function FilesTemplate(emit, refresh) {
+function Template(emit, refresh) {
   return { render: render };
 
   function render() {
     return ['h1', 'Files'];
   }
 }
-function SharedTemplate(emit, refresh) {
-  return { render: render };
 
-  function render() {
-    return ['h1', 'Shared'];
-  }
-}
-function MusicTemplate(emit, refresh) {
-  return { render: render };
-
-  function render() {
-    return ['h1', 'Music'];
-  }
-}
-function PhotosTemplate(emit, refresh) {
-  return { render: render };
-
-  function render() {
-    return ['h1', 'Photos'];
-  }
+function urlChange(listItem, a) {
+  console.log(listItem);
+  console.log(a);
 }
 
 // Creating a instance attached to document.body
 var navbar = domChanger(Nav, document.body);
-var filesTemplate = domChanger(FilesTemplate, document.body);
-var sharedTemplate = domChanger(SharedTemplate, document.body);
-var musicTemplate = domChanger(MusicTemplate, document.body);
-var photosTemplate = domChanger(PhotosTemplate, document.body);
-
-// Send in the initial data to render.
-navbar.update();
+var template = domChanger(Template, document.body);
 
 window.onhashchange = function () {
   if (!window.location.hash) window.location.hash = '#files'
@@ -58,18 +37,15 @@ window.onhashchange = function () {
 window.onload = window.onhashchange
 
 function setCurrent(url) {
+  navbar.update();
+  template.update();
   switch(url) {
     case '#shared':
-      filesTemplate.destory()
-      sharedTemplate.update();
       break
     case '#music':
-      musicTemplate.update();
       break
     case '#photos':
-      photosTemplate.update();
       break
     default:
-      filesTemplate.update();
   }
 }
